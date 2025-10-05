@@ -20,6 +20,12 @@ class TicketViewSet(ModelViewSet):
     search_fields = ["title", "description", "comments__text"]
     ordering_fields = ["created_at", "updated_at", "priority"]
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.role in ["agent", "admin"]:
+            return Ticket.objects.all()
+        return Ticket.objects.filter(created_by=user)
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 

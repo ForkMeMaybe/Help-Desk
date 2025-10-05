@@ -10,6 +10,9 @@ from smtplib import SMTPException
 from templated_mail.mail import BaseEmailMessage
 from .utils import generate_otp, validate_otp
 from django.http import JsonResponse
+from rest_framework.permissions import IsAdminUser
+from .models import CustomUser
+from .serializers import AgentSerializer
 
 
 @csrf_exempt
@@ -93,3 +96,9 @@ class MetaView(viewsets.ViewSet):
 class HealthCheckView(viewsets.ViewSet):
     def list(self, request):
         return Response({"status": "ok"})
+
+
+class AgentViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CustomUser.objects.filter(role='agent')
+    serializer_class = AgentSerializer
+    permission_classes = [IsAdminUser]

@@ -5,6 +5,7 @@ from . import views
 router = DefaultRouter()
 router.register(r"health", views.HealthCheckView, basename="health")
 router.register(r"_meta", views.MetaView, basename="meta")
+router.register(r'agents', views.AgentViewSet, basename='agents')
 
 urlpatterns = [
     path("", include(router.urls)),
