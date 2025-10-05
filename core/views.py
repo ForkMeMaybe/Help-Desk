@@ -11,6 +11,7 @@ from templated_mail.mail import BaseEmailMessage
 from .utils import generate_otp, validate_otp
 from django.http import JsonResponse
 from rest_framework.permissions import IsAdminUser, AllowAny
+from tickets.permissions import IsAdmin
 from .models import CustomUser
 from .serializers import AgentSerializer
 
@@ -113,4 +114,4 @@ def hackathon_json_view(request):
 class AgentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.filter(role='agent')
     serializer_class = AgentSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdmin]
