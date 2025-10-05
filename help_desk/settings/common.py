@@ -163,6 +163,6 @@ DJOSER = {
     },
 }
 
-SITE_DOMAIN = "help-desk-mini-frontend.onrender.com"
+SITE_DOMAIN = "helpdesk-mini-frontend-3ku8.onrender.com"
 DOMAIN = SITE_DOMAIN
 SITE_NAME = "Help Desk"
