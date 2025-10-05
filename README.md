@@ -72,6 +72,9 @@ curl -X GET -H "Authorization: JWT <your_auth_token>" /api/tickets/
 *   **agent:**
     *   email: `agent@example.com`
     *   password: `ILoveDjango`
+*   **agent 3:**
+    *   email: `agent3@example.com`
+    *   password: `ILoveDjango`
 *   **admin:**
     *   email: `user@example.com`
     *   password: `ILoveDjango`

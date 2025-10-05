@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, BooleanFilter
-from .serializers import TicketSerializer, CommentSerializer
+from .serializers import TicketSerializer, CommentSerializer, TicketListSerializer
 from .permissions import IsOwnerOrReadOnly, IsAgent, IsAdmin
 from .filters import TicketFilter
 
@@ -19,6 +19,11 @@ class TicketViewSet(ModelViewSet):
     filterset_class = TicketFilter
     search_fields = ["title", "description", "comments__text"]
     ordering_fields = ["created_at", "updated_at", "priority"]
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return TicketListSerializer
+        return TicketSerializer
 
     def get_queryset(self):
         user = self.request.user
