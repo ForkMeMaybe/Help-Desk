@@ -19,31 +19,6 @@ class TicketHistorySerializer(serializers.ModelSerializer):
         fields = ["id", "user", "field_changed", "old_value", "new_value", "timestamp"]
 
 
-class TicketListSerializer(serializers.ModelSerializer):
-    created_by = serializers.ReadOnlyField(source="created_by.username")
-    assigned_to = serializers.StringRelatedField()
-    comments = CommentSerializer(many=True, read_only=True)
-    history = TicketHistorySerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Ticket
-        fields = [
-            "id",
-            "title",
-            "description",
-            "created_by",
-            "assigned_to",
-            "status",
-            "priority",
-            "created_at",
-            "updated_at",
-            "sla_deadline",
-            "version",
-            "comments",
-            "history",
-        ]
-
-
 class TicketSerializer(serializers.ModelSerializer):
     created_by = serializers.ReadOnlyField(source="created_by.username")
     assigned_to = serializers.SlugRelatedField(
