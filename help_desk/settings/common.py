@@ -162,3 +162,7 @@ DJOSER = {
         "current_user": "core.serializers.UserSerializer",
     },
 }
+
+SITE_DOMAIN = "help-desk-mini-frontend.onrender.com"
+DOMAIN = SITE_DOMAIN
+SITE_NAME = "Help Desk"
