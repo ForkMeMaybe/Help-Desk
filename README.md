@@ -103,8 +103,8 @@ The API uses a `version` field on the `Ticket` model to implement optimistic loc
 The API uses custom permission classes to enforce role-based access control:
 
 *   **User Role:** Can create new tickets. Can view and comment on ONLY their own tickets.
-*   **Agent Role:** Can do everything a User can, PLUS: view all tickets, assign any ticket to themselves, and change the status of any ticket.
-*   **Admin Role:** Can do everything an Agent can, PLUS: assign any ticket to any agent and delete any ticket or comment.
+*   **Agent Role:** Can do everything a User can, PLUS: view all tickets, assign any ticket to themselves, and change the status of any ticket, change priority of ticket.
+*   **Admin Role:** Can do everything an Agent can, PLUS: assign any ticket to any agent and delete any ticket or comment, change priority of ticket.
 
 ### Static File
 

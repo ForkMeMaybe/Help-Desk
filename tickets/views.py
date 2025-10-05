@@ -40,6 +40,7 @@ class TicketViewSet(ModelViewSet):
 
         old_status = ticket.status
         old_assigned_to = ticket.assigned_to
+        old_priority = ticket.priority
 
         serializer = self.get_serializer(ticket, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
@@ -47,6 +48,7 @@ class TicketViewSet(ModelViewSet):
 
         new_status = updated_ticket.status
         new_assigned_to = updated_ticket.assigned_to
+        new_priority = updated_ticket.priority
 
         if old_status != new_status:
             TicketHistory.objects.create(
@@ -64,6 +66,15 @@ class TicketViewSet(ModelViewSet):
                 field_changed="assigned_to",
                 old_value=old_assigned_to.username if old_assigned_to else "Unassigned",
                 new_value=new_assigned_to.username if new_assigned_to else "Unassigned",
+            )
+
+        if old_priority != new_priority:
+            TicketHistory.objects.create(
+                ticket=updated_ticket,
+                user=request.user,
+                field_changed="priority",
+                old_value=old_priority,
+                new_value=new_priority,
             )
 
         updated_ticket.version += 1
