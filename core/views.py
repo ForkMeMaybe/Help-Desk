@@ -10,7 +10,7 @@ from smtplib import SMTPException
 from templated_mail.mail import BaseEmailMessage
 from .utils import generate_otp, validate_otp
 from django.http import JsonResponse
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from .models import CustomUser
 from .serializers import AgentSerializer
 
@@ -89,6 +89,7 @@ def verify_otp(request):
 
 
 class MetaView(viewsets.ViewSet):
+    permission_classes = [AllowAny]
     def list(self, request):
         return Response({"name": "HelpDesk Mini", "version": "1.0.0"})
 
