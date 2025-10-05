@@ -14,6 +14,11 @@ django-templated-mail = "*"
 pyotp = "*"
 django-redis = "*"
 django-filter = "*"
+dj-database-url = "*"
+sendgrid = "*"
+django-sendgrid-v5 = "*"
+gunicorn = "*"
+whitenoise = "*"
 
 [dev-packages]
 
