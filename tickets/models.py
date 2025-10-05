@@ -41,3 +41,11 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+class TicketHistory(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='history')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    field_changed = models.CharField(max_length=100)
+    old_value = models.CharField(max_length=255)
+    new_value = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)

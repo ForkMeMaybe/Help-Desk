@@ -17,10 +17,15 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('tickets.urls')),
+    path("admin/", admin.site.urls),
+    path("api/", include("core.urls")),
+    path("api/", include("tickets.urls")),
     path("auth/", include("djoser.urls")),
-    path("auth/", include('djoser.urls.jwt')),
-]
+    path("auth/", include("djoser.urls.jwt")),
+    path(".well-known/hackathon.json", RedirectView.as_view(url='/static/.well-known/hackathon.json')),
+] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

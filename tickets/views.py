@@ -1,24 +1,22 @@
 from rest_framework import status
-from rest_framework.viewsets import ModelViewSet, ViewSet
+from django.utils import timezone
+from .models import Ticket, Comment, TicketHistory
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
-from tickets.models import Ticket, Comment
-from .serializers import TicketSerializer, CommentSerializer, UserSerializer
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet, BooleanFilter
+from .serializers import TicketSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly, IsAgent, IsAdmin
+from .filters import TicketFilter
 
 
 class TicketViewSet(ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-    pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ["status", "priority", "assigned_to"]
+    filterset_class = TicketFilter
     search_fields = ["title", "description", "comments__text"]
     ordering_fields = ["created_at", "updated_at", "priority"]
 
@@ -40,10 +38,40 @@ class TicketViewSet(ModelViewSet):
                 status=status.HTTP_409_CONFLICT,
             )
 
-        ticket.version += 1
-        ticket.save()
+        old_status = ticket.status
+        old_assigned_to = ticket.assigned_to
 
-        return super().partial_update(request, *args, **kwargs)
+        serializer = self.get_serializer(ticket, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        updated_ticket = serializer.save()
+
+        new_status = updated_ticket.status
+        new_assigned_to = updated_ticket.assigned_to
+
+        if old_status != new_status:
+            TicketHistory.objects.create(
+                ticket=updated_ticket,
+                user=request.user,
+                field_changed="status",
+                old_value=old_status,
+                new_value=new_status,
+            )
+
+        if old_assigned_to != new_assigned_to:
+            TicketHistory.objects.create(
+                ticket=updated_ticket,
+                user=request.user,
+                field_changed="assigned_to",
+                old_value=old_assigned_to.username if old_assigned_to else "Unassigned",
+                new_value=new_assigned_to.username if new_assigned_to else "Unassigned",
+            )
+
+        updated_ticket.version += 1
+        updated_ticket.save()
+
+        # We need to re-serialize the object to include the updated version number
+        final_serializer = self.get_serializer(updated_ticket)
+        return Response(final_serializer.data)
 
 
 class CommentViewSet(ModelViewSet):
@@ -57,32 +85,3 @@ class CommentViewSet(ModelViewSet):
     def perform_create(self, serializer):
         ticket = Ticket.objects.get(pk=self.kwargs["ticket_pk"])
         serializer.save(user=self.request.user, ticket=ticket)
-
-
-# class UserRegistrationView(ViewSet):
-#     def create(self, request):
-#         serializer = UserSerializer(data=request.data)
-#         if serializer.is_valid():
-#             user = serializer.save()
-#             token, created = Token.objects.get_or_create(user=user)
-#             return Response({"token": token.key}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class UserLoginView(ViewSet):
-#     def create(self, request):
-#         username = request.data.get("username")
-#         password = request.data.get("password")
-#         user = authenticate(username=username, password=password)
-#         if user:
-#             token, created = Token.objects.get_or_create(user=user)
-#             return Response({"token": token.key})
-#         return Response(
-#             {"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST
-#         )
-
-
-class HealthCheckView(ViewSet):
-    def list(self, request):
-        return Response({"status": "ok"})
-

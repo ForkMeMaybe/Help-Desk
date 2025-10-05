@@ -1,4 +1,6 @@
 from django.core.mail import BadHeaderError
+from rest_framework import viewsets
+from rest_framework.response import Response
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -82,3 +84,12 @@ def verify_otp(request):
 
     return JsonResponse({"success": False, "message": "Invalid request method."})
 
+
+class MetaView(viewsets.ViewSet):
+    def list(self, request):
+        return Response({"name": "HelpDesk Mini", "version": "1.0.0"})
+
+
+class HealthCheckView(viewsets.ViewSet):
+    def list(self, request):
+        return Response({"status": "ok"})
