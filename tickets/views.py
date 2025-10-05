@@ -17,7 +17,15 @@ class TicketViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = TicketFilter
-    search_fields = ["title", "description", "comments__text"]
+    search_fields = [
+        "title",
+        "description",
+        "comments__text",
+        "history__user__username",
+        "history__field_changed",
+        "history__old_value",
+        "history__new_value",
+    ]
     ordering_fields = ["created_at", "updated_at", "priority"]
 
     def get_queryset(self):
