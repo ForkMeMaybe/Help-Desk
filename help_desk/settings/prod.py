@@ -1,10 +1,14 @@
 from .common import *
+from corsheaders.defaults import default_headers
 import dj_database_url
 import os
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "Idempotency-Key",
+]
 
 REDIS_URL = os.environ.get("REDIS_URL")
 CACHES = {
@@ -34,3 +38,4 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
