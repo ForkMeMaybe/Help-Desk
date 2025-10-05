@@ -98,6 +98,17 @@ class HealthCheckView(viewsets.ViewSet):
         return Response({"status": "ok"})
 
 
+from django.http import JsonResponse
+from django.conf import settings
+import json
+import os
+
+def hackathon_json_view(request):
+    file_path = os.path.join(settings.BASE_DIR, 'static', '.well-known', 'hackathon.json')
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    return JsonResponse(data)
+
 class AgentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.filter(role='agent')
     serializer_class = AgentSerializer
