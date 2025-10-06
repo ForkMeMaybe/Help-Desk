@@ -94,7 +94,6 @@ class TicketViewSet(ModelViewSet):
         updated_ticket.version += 1
         updated_ticket.save()
 
-        # We need to re-serialize the object to include the updated version number
         final_serializer = self.get_serializer(updated_ticket)
         return Response(final_serializer.data)
 

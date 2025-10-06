@@ -40,14 +40,25 @@ class Ticket(models.Model):
     version = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
-        if not self.pk:
+        is_new = self.pk is None
+        if is_new:
+            recalculate_sla = True
+        else:
+            try:
+                original = Ticket.objects.get(pk=self.pk)
+                recalculate_sla = original.priority != self.priority
+            except Ticket.DoesNotExist:
+                recalculate_sla = True
+
+        if recalculate_sla:
             now = timezone.now()
             if self.priority == "High":
                 self.sla_deadline = now + timezone.timedelta(hours=24)
             elif self.priority == "Medium":
                 self.sla_deadline = now + timezone.timedelta(hours=48)
             else:
-                self.sla_deadline = now + timezone.timedelta(days=72)
+                self.sla_deadline = now + timezone.timedelta(hours=72)
+
         super().save(*args, **kwargs)
 
 
@@ -69,4 +80,3 @@ class TicketHistory(models.Model):
     old_value = models.CharField(max_length=255)
     new_value = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
-
