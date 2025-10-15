@@ -1,41 +1,43 @@
 # HelpDesk Mini API
 
+# Link: [https://helpdesk-mini-frontend-3ku8.onrender.com/login](https://helpdesk-mini-frontend-3ku8.onrender.com/login)
+
 This is a Django REST Framework project for a mini help desk ticketing system.
 
 ## API Endpoints
 
 ### Authentication
 
-*   `POST /auth/users/`: Create a new user.
-*   `POST /auth/jwt/create/`: Get an auth token.
-*   `POST /auth/users/reset_password/`: Get an link to reset password on email.
+- `POST /auth/users/`: Create a new user.
+- `POST /auth/jwt/create/`: Get an auth token.
+- `POST /auth/users/reset_password/`: Get an link to reset password on email.
 
 ### Tickets
 
-*   `GET /api/tickets/`: List all tickets.
-    *   Filtering: `?status=...`, `?priority=...`, `?assigned_to=...`, `?is_breached=true`
-    *   Searching: `?search=...` (searches `title`, `description`, and latest `comment`)
-    *   Pagination: `?limit=...`, `?offset=...`
-*   `POST /api/tickets/`: Create a new ticket.
-*   `GET /api/tickets/<int:id>/`: Retrieve a single ticket.
-*   `PATCH /api/tickets/<int:id>/`: Update a ticket. (admin or agent only)
-*   `DELETE /api/tickets/<int:id>/`: Delete a ticket (admin only).
+- `GET /api/tickets/`: List all tickets.
+  - Filtering: `?status=...`, `?priority=...`, `?assigned_to=...`, `?is_breached=true`
+  - Searching: `?search=...` (searches `title`, `description`, and latest `comment`)
+  - Pagination: `?limit=...`, `?offset=...`
+- `POST /api/tickets/`: Create a new ticket.
+- `GET /api/tickets/<int:id>/`: Retrieve a single ticket.
+- `PATCH /api/tickets/<int:id>/`: Update a ticket. (admin or agent only)
+- `DELETE /api/tickets/<int:id>/`: Delete a ticket (admin only).
 
 ### Comments
 
-*   `POST /api/tickets/<int:id>/comments/`: Create a new comment for a ticket.
+- `POST /api/tickets/<int:id>/comments/`: Create a new comment for a ticket.
 
 ### Ticket History
 
-*   `GET /api/tickets/`: Get the history of a ticket. (already included with each ticket)
+- `GET /api/tickets/`: Get the history of a ticket. (already included with each ticket)
 
 ### Meta
 
-*   `GET /api/_meta/`: Get project metadata.
+- `GET /api/_meta/`: Get project metadata.
 
 ### Health Check
 
-*   `GET /api/health/`: Check the health of the API.
+- `GET /api/health/`: Check the health of the API.
 
 ## Example `curl` Requests
 
@@ -44,7 +46,8 @@ This is a Django REST Framework project for a mini help desk ticketing system.
 ```bash
 cURL -X POST -H "Content-Type: application/json" -d '{"first_name": "john", "last_name": "doe", "email": "john@domain.com", "username": "testuser", "password": "testpassword", "re_password": "testpassword", "role": "user"}' /auth/users/
 ```
-before you submit the form to create a user the email must be verified so make an api call to /api/send_otp/ (email) and /api/verify_otp/ (email and user otp) 
+
+before you submit the form to create a user the email must be verified so make an api call to /api/send_otp/ (email) and /api/verify_otp/ (email and user otp)
 
 **Login:**
 
@@ -66,15 +69,15 @@ curl -X GET -H "Authorization: JWT <your_auth_token>" /api/tickets/
 
 ## Test Users
 
-*   **user:**
-    *   email: `admin@example.com`
-    *   password: `ILoveDjango`
-*   **agent:**
-    *   email: `agent@example.com`
-    *   password: `ILoveDjango`
-*   **admin:**
-    *   email: `user@example.com`
-    *   password: `ILoveDjango`
+- **user:**
+  - email: `admin@example.com`
+  - password: `ILoveDjango`
+- **agent:**
+  - email: `agent@example.com`
+  - password: `ILoveDjango`
+- **admin:**
+  - email: `user@example.com`
+  - password: `ILoveDjango`
 
 ## Architecture Note
 
@@ -102,9 +105,9 @@ The API uses a `version` field on the `Ticket` model to implement optimistic loc
 
 The API uses custom permission classes to enforce role-based access control:
 
-*   **User Role:** Can create new tickets. Can view and comment on ONLY their own tickets.
-*   **Agent Role:** Can do everything a User can, PLUS: view all tickets, assign any ticket to themselves, and change the status of any ticket, change priority of ticket.
-*   **Admin Role:** Can do everything an Agent can, PLUS: assign any ticket to any agent and delete any ticket or comment, change priority of ticket.
+- **User Role:** Can create new tickets. Can view and comment on ONLY their own tickets.
+- **Agent Role:** Can do everything a User can, PLUS: view all tickets, assign any ticket to themselves, and change the status of any ticket, change priority of ticket.
+- **Admin Role:** Can do everything an Agent can, PLUS: assign any ticket to any agent and delete any ticket or comment, change priority of ticket.
 
 ### Static File
 
