@@ -1,8 +1,20 @@
 # HelpDesk Mini API
 
-# Link: [https://helpdesk-mini-frontend-3ku8.onrender.com/login](https://helpdesk-mini-frontend-3ku8.onrender.com/login)
+Link: [https://helpdesk-mini-frontend-3ku8.onrender.com/login](https://helpdesk-mini-frontend-3ku8.onrender.com/login)
 
 This is a Django REST Framework project for a mini help desk ticketing system.
+
+## Test Users
+
+- **user:**
+  - email: `admin@example.com`
+  - password: `ILoveDjango`
+- **agent:**
+  - email: `agent@example.com`
+  - password: `ILoveDjango`
+- **admin:**
+  - email: `user@example.com`
+  - password: `ILoveDjango`
 
 ## API Endpoints
 
@@ -66,18 +78,6 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: JWT <your_au
 ```bash
 curl -X GET -H "Authorization: JWT <your_auth_token>" /api/tickets/
 ```
-
-## Test Users
-
-- **user:**
-  - email: `admin@example.com`
-  - password: `ILoveDjango`
-- **agent:**
-  - email: `agent@example.com`
-  - password: `ILoveDjango`
-- **admin:**
-  - email: `user@example.com`
-  - password: `ILoveDjango`
 
 ## Architecture Note
 
